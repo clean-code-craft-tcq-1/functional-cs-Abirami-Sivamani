@@ -3,15 +3,39 @@ using System.Diagnostics;
 
 class Checker
 {
-    static bool batteryIsOk(float temperature, float soc, float chargeRate) {
-        if(temperature < 0 || temperature > 45) {
+    static bool batteryIsOk(float temperature, float soc, float chargeRate)
+    {
+        bool checkConstrain = checkTemperature(temperature);
+        checkConstrain = checkStateOfCharge(soc);
+        checkConstrain = checkChargeRate(chargeRate);
+        return checkConstrain;
+    }
+
+    static bool checkChargeRate(float chargeRate)
+    {
+        if (chargeRate > 0.8)
+        {
+            Console.WriteLine("Charge Rate is out of range!");
+            return false;
+        }
+        return true;
+    }
+
+    static bool checkTemperature(float temperature)
+    {
+        if (temperature < 0 || temperature > 45)
+        {
             Console.WriteLine("Temperature is out of range!");
             return false;
-        } else if(soc < 20 || soc > 80) {
+        }
+        return true;
+    }
+
+    static bool checkStateOfCharge(float soc)
+    {
+        if (soc < 20 || soc > 80)
+        {
             Console.WriteLine("State of Charge is out of range!");
-            return false;
-        } else if(chargeRate > 0.8) {
-            Console.WriteLine("Charge Rate is out of range!");
             return false;
         }
         return true;
