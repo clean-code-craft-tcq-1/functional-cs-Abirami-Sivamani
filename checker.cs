@@ -3,6 +3,13 @@ using System.Diagnostics;
 
 class Checker
 {
+    /// <summary>
+    /// Batteries the is ok.
+    /// </summary>
+    /// <param name="temperature">The temperature.</param>
+    /// <param name="soc">The soc.</param>
+    /// <param name="chargeRate">The charge rate.</param>
+    /// <returns></returns>
     static bool batteryIsOk(float temperature, float soc, float chargeRate)
     {
         bool temperatureConstrainCheck = checkTemperature(temperature);
@@ -10,6 +17,12 @@ class Checker
         bool chargeRateConstrainCheck = checkChargeRate(chargeRate);
         return (temperatureConstrainCheck && chargeStateConstrainCheck && chargeRateConstrainCheck);
     }
+
+    /// <summary>
+    /// Checks the charge rate.
+    /// </summary>
+    /// <param name="chargeRate">The charge rate.</param>
+    /// <returns></returns>
     static bool checkChargeRate(float chargeRate)
     {
         if (chargeRate > 0.8)
@@ -20,6 +33,11 @@ class Checker
         return true;
     }
 
+     /// <summary>
+    /// Checks the temperature.
+    /// </summary>
+    /// <param name="temperature">The temperature.</param>
+    /// <returns></returns>
     static bool checkTemperature(float temperature)
     {
         if (temperature < 0 || temperature > 45)
@@ -30,6 +48,11 @@ class Checker
         return true;
     }
 
+    /// <summary>
+    /// Checks the state of charge.
+    /// </summary>
+    /// <param name="soc">The soc.</param>
+    /// <returns></returns>
     static bool checkStateOfCharge(float soc)
     {
         if (soc < 20 || soc > 80)
