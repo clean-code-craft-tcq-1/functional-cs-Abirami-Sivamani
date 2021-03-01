@@ -8,9 +8,7 @@ class Checker
         bool temperatureConstrainCheck = checkTemperature(temperature);
         bool chargeStateConstrainCheck = checkStateOfCharge(soc);
         bool chargeRateConstrainCheck = checkChargeRate(chargeRate);
-        if (temperatureConstrainCheck && chargeStateConstrainCheck && chargeRateConstrainCheck)
-            return true;
-        return false;
+        return (temperatureConstrainCheck && chargeStateConstrainCheck && chargeRateConstrainCheck);
     }
     static bool checkChargeRate(float chargeRate)
     {
