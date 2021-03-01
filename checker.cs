@@ -5,12 +5,13 @@ class Checker
 {
     static bool batteryIsOk(float temperature, float soc, float chargeRate)
     {
-        bool checkConstrain = checkTemperature(temperature);
-        checkConstrain = checkStateOfCharge(soc);
-        checkConstrain = checkChargeRate(chargeRate);
-        return checkConstrain;
+        bool temperatureConstrainCheck = checkTemperature(temperature);
+        bool chargeStateConstrainCheck = checkStateOfCharge(soc);
+        bool chargeRateConstrainCheck = checkChargeRate(chargeRate);
+        if (temperatureConstrainCheck && chargeStateConstrainCheck && chargeRateConstrainCheck)
+            return true;
+        return false;
     }
-
     static bool checkChargeRate(float chargeRate)
     {
         if (chargeRate > 0.8)
