@@ -28,6 +28,8 @@ class Checker
         if (temperature < 0 || temperature > 45)
         {
             DisplayOutOfRangeMessage("Temperature");
+            EvaluateHighTemperature(temperature);
+            EvaluateLowTemperature(temperature);
             return false;
         }
         return true;
@@ -61,6 +63,18 @@ class Checker
             return false;
         }
         return true;
+    }
+    
+    static void EvaluateHighTemperature(float temperature)
+    {
+        if (temperature > 45)
+            Console.WriteLine("Battery Temperature exceeds its maximum limit");
+    }
+
+    static void EvaluateLowTemperature(float temperature)
+    {
+        if (temperature < 0)
+            Console.WriteLine("Battery Temperature lower than its minimum limit");
     }
     
     ///<summary>
