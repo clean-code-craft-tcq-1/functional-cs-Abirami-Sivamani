@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 class Checker
 {
-    /// <summary>
+   /// <summary>
     /// Batteries the is ok.
     /// </summary>
     /// <param name="temperature">The temperature.</param>
@@ -18,7 +18,7 @@ class Checker
         return (temperatureConstrainCheck && chargeStateConstrainCheck && chargeRateConstrainCheck);
     }
 
-     /// <summary>
+    /// <summary>
     /// Checks the temperature.
     /// </summary>
     /// <param name="temperature">The temperature.</param>
@@ -27,9 +27,9 @@ class Checker
     {
         if (temperature < 0 || temperature > 45)
         {
-            DisplayOutOfRangeMessage("Temperature");
             EvaluateHighTemperature(temperature);
             EvaluateLowTemperature(temperature);
+            DisplayOutOfRangeMessage("Temperature");
             return false;
         }
         return true;
@@ -44,12 +44,14 @@ class Checker
     {
         if (soc < 20 || soc > 80)
         {
+            EvaluateHighStateOfCharge(soc);
+            EvaluateLowStateOfCharge(soc);
             DisplayOutOfRangeMessage("State of Charge");
             return false;
         }
         return true;
     }
-    
+
     /// <summary>
     /// Checks the charge rate.
     /// </summary>
@@ -59,6 +61,7 @@ class Checker
     {
         if (chargeRate > 0.8)
         {
+            EvaluateHighChargeRate(chargeRate);
             DisplayOutOfRangeMessage("Charge Rate");
             return false;
         }
@@ -68,23 +71,47 @@ class Checker
     static void EvaluateHighTemperature(float temperature)
     {
         if (temperature > 45)
-            Console.WriteLine("Battery Temperature exceeds its maximum limit");
+            PrintMaximumLimitMessage("Temperature", 45);
     }
 
     static void EvaluateLowTemperature(float temperature)
     {
         if (temperature < 0)
-            Console.WriteLine("Battery Temperature lower than its minimum limit");
+            PrintMinimumLimitMessage("Temperature", 0);
     }
-    
-    ///<summary>
-    ///Displays the Out of Range Message for all battery constrain
-    ///<summary>
+
+    static void EvaluateHighStateOfCharge(float soc)
+    {
+        if (soc > 80)
+            PrintMaximumLimitMessage("State of Charge", 80);
+    }
+
+    static void EvaluateLowStateOfCharge(float soc)
+    {
+        if (soc < 20)
+            PrintMinimumLimitMessage("State of Charge", 0);
+    }
+
+    static void EvaluateHighChargeRate(float chargeRate)
+    {
+        if (chargeRate > 0.8)
+            PrintMaximumLimitMessage("Charge Rate", 0.8f);
+    }
+
+    static void PrintMaximumLimitMessage(string Constrain, float MaximumLimit)
+    {
+        Console.WriteLine(Constrain + " has exceeded its Maximum Limit of " + MaximumLimit);
+    }
+
+    static void PrintMinimumLimitMessage(string Constrain, float MaximumLimit)
+    {
+        Console.WriteLine(Constrain + " has fall behind its Minimum Limit of " + MaximumLimit);
+    }
+
     static void DisplayOutOfRangeMessage(string Constrain)
     {
         Console.WriteLine(Constrain + " is out of range!");
     }
-
     static void ExpectTrue(bool expression) {
         if(!expression) {
             Console.WriteLine("Expected true, but got false");
@@ -100,7 +127,7 @@ class Checker
     static int Main() {
         ExpectTrue(batteryIsOk(25, 70, 0.7f));
         ExpectFalse(batteryIsOk(60, 65, 0.6f));
-        ExpectFalse(batteryIsOk(50, 85, 0.0f));
+        ExpectFalse(batteryIsOk(-50, 85, 0.0f));
         ExpectFalse(batteryIsOk(55, 10, 0.9f));
         Console.WriteLine("All ok");
         return 0;
