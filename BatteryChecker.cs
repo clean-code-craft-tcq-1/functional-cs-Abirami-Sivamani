@@ -85,7 +85,9 @@ class BatteryChecker
     }
     static int Main() {
         ExpectTrue(batteryIsOk(25, 70, 0.7f));
+        ExpectFalse(batteryIsOk(60, 65, 0.6f));
         ExpectFalse(batteryIsOk(50, 85, 0.0f));
+        ExpectFalse(batteryIsOk(55, 10, 0.9f));
         Console.WriteLine("All ok");
         return 0;
     }
