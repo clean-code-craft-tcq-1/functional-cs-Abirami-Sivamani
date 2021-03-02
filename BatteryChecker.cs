@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-class Checker
+class BatteryChecker
 {
     /// <summary>
     /// Batteries the is ok.
@@ -18,21 +18,6 @@ class Checker
         return (temperatureConstrainCheck && chargeStateConstrainCheck && chargeRateConstrainCheck);
     }
 
-    /// <summary>
-    /// Checks the charge rate.
-    /// </summary>
-    /// <param name="chargeRate">The charge rate.</param>
-    /// <returns></returns>
-    static bool checkChargeRate(float chargeRate)
-    {
-        if (chargeRate > 0.8)
-        {
-            Console.WriteLine("Charge Rate is out of range!");
-            return false;
-        }
-        return true;
-    }
-
      /// <summary>
     /// Checks the temperature.
     /// </summary>
@@ -42,7 +27,7 @@ class Checker
     {
         if (temperature < 0 || temperature > 45)
         {
-            Console.WriteLine("Temperature is out of range!");
+            DisplayOutOfRangeMessage("Temperature");
             return false;
         }
         return true;
@@ -57,10 +42,33 @@ class Checker
     {
         if (soc < 20 || soc > 80)
         {
-            Console.WriteLine("State of Charge is out of range!");
+            DisplayOutOfRangeMessage("State of Charge");
             return false;
         }
         return true;
+    }
+    
+    /// <summary>
+    /// Checks the charge rate.
+    /// </summary>
+    /// <param name="chargeRate">The charge rate.</param>
+    /// <returns></returns>
+    static bool checkChargeRate(float chargeRate)
+    {
+        if (chargeRate > 0.8)
+        {
+            DisplayOutOfRangeMessage("Charge Rate");
+            return false;
+        }
+        return true;
+    }
+    
+    ///<summary>
+    ///Displays the Out of Range Message for all battery constrain
+    ///<summary>
+    static void DisplayOutOfRangeMessage(string Constrain)
+    {
+        Console.WriteLine(Constrain + " is out of range!");
     }
 
     static void ExpectTrue(bool expression) {
