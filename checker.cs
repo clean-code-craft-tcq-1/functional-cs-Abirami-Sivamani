@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-class BatteryChecker
+class Checker
 {
     /// <summary>
     /// Batteries the is ok.
