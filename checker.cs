@@ -68,67 +68,102 @@ class Checker
         return true;
     }
     
+     /// <summary>
+    /// Evaluates the battery high temperature.
+    /// </summary>
+    /// <param name="temperature">The temperature.</param>
     static void EvaluateHighTemperature(float temperature)
     {
         if (temperature > 45)
             PrintMaximumLimitMessage("Temperature", 45);
     }
 
+    /// <summary>
+    /// Evaluates the battery low temperature.
+    /// </summary>
+    /// <param name="temperature">The temperature.</param>
     static void EvaluateLowTemperature(float temperature)
     {
         if (temperature < 0)
             PrintMinimumLimitMessage("Temperature", 0);
     }
 
+    /// <summary>
+    /// Evaluates the battery high state of charge.
+    /// </summary>
+    /// <param name="soc">The soc.</param>
     static void EvaluateHighStateOfCharge(float soc)
     {
         if (soc > 80)
             PrintMaximumLimitMessage("State of Charge", 80);
     }
 
+    /// <summary>
+    /// Evaluates the battery low state of charge.
+    /// </summary>
+    /// <param name="soc">The soc.</param>
     static void EvaluateLowStateOfCharge(float soc)
     {
         if (soc < 20)
             PrintMinimumLimitMessage("State of Charge", 0);
     }
 
+    /// <summary>
+    /// Evaluates the battery high charge rate.
+    /// </summary>
+    /// <param name="chargeRate">The charge rate.</param>
     static void EvaluateHighChargeRate(float chargeRate)
     {
         if (chargeRate > 0.8)
             PrintMaximumLimitMessage("Charge Rate", 0.8f);
     }
 
-    static void PrintMaximumLimitMessage(string Constrain, float MaximumLimit)
+     /// <summary>
+    /// Prints the battery constrain maximum limit reached message.
+    /// </summary>
+    static void PrintMaximumLimitMessage(string BatteryMeasure, float MaximumLimit)
     {
-        Console.WriteLine(Constrain + " has exceeded its Maximum Limit of " + MaximumLimit);
+        Console.WriteLine(BatteryMeasure + " has exceeded its Maximum Limit of " + MaximumLimit);
     }
 
-    static void PrintMinimumLimitMessage(string Constrain, float MaximumLimit)
+    /// <summary>
+    /// Prints the battery constrain fall behinid minimum limit reached.
+    /// </summary>
+    static void PrintMinimumLimitMessage(string BatteryMeasure, float MinimumLimit)
     {
-        Console.WriteLine(Constrain + " has fall behind its Minimum Limit of " + MaximumLimit);
+        Console.WriteLine(BatteryMeasure + " has fall behind its Minimum Limit of " + MinimumLimit);
     }
 
-    static void DisplayOutOfRangeMessage(string Constrain)
+     /// <summary>
+    /// Prints the battery constrain out of range message
+    /// </summary>
+    static void DisplayOutOfRangeMessage(string BatteryMeasure)
     {
-        Console.WriteLine(Constrain + " is out of range!");
+        Console.WriteLine(BatteryMeasure + " is out of range!");
     }
+   
     static void ExpectTrue(bool expression) {
         if(!expression) {
             Console.WriteLine("Expected true, but got false");
             Environment.Exit(1);
         }
     }
+   
     static void ExpectFalse(bool expression) {
         if(expression) {
             Console.WriteLine("Expected false, but got true");
             Environment.Exit(1);
         }
     }
+   
+   ///<summary>
+   ///Test cases to test the Battery Constrain Measure
+   ///<summary>
     static int Main() {
         ExpectTrue(batteryIsOk(25, 70, 0.7f));
         ExpectFalse(batteryIsOk(60, 65, 0.6f));
         ExpectFalse(batteryIsOk(-50, 85, 0.0f));
-        ExpectFalse(batteryIsOk(55, 10, 0.9f));
+        ExpectFalse(batteryIsOk(43, 10, 0.9f));
         Console.WriteLine("All ok");
         return 0;
     }
