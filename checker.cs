@@ -142,15 +142,15 @@ class Checker
         Console.WriteLine(BatteryMeasure + " is out of range!");
     }
    
-    static void ExpectTrue(bool expression) {
-        if(!expression) {
+    static void PassedBatteryMeasure(bool IsBatteryOk) {
+        if(!IsBatteryOk) {
             Console.WriteLine("Expected true, but got false");
             Environment.Exit(1);
         }
     }
    
-    static void ExpectFalse(bool expression) {
-        if(expression) {
+    static void FailedBatteryMeasure(bool IsBatteryOk) {
+        if(IsBatteryOk) {
             Console.WriteLine("Expected false, but got true");
             Environment.Exit(1);
         }
@@ -160,10 +160,10 @@ class Checker
    ///Test cases to test the Battery Constrain Measure
    ///<summary>
     static int Main() {
-        ExpectTrue(batteryIsOk(25, 70, 0.7f));
-        ExpectFalse(batteryIsOk(60, 65, 0.6f));
-        ExpectFalse(batteryIsOk(-50, 85, 0.0f));
-        ExpectFalse(batteryIsOk(43, 10, 0.9f));
+        PassedBatteryMeasure(batteryIsOk(25, 70, 0.7f));
+        FailedBatteryMeasure(batteryIsOk(60, 65, 0.6f));
+        FailedBatteryMeasure(batteryIsOk(-50, 85, 0.0f));
+        FailedBatteryMeasure(batteryIsOk(43, 10, 0.9f));
         Console.WriteLine("All ok");
         return 0;
     }
