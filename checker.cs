@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using BatteryChecker;
 
 class Checker
 {
@@ -27,7 +28,7 @@ class Checker
     {
         if (temperature < 0 || temperature > 45)
         {
-            EvaluateBatteryMeasure(temperature, "Temperature");
+            BatteryMeasure.EvaluateBatteryMeasure(temperature, "Temperature");
             return false;
         }
         return true;
@@ -42,7 +43,7 @@ class Checker
     {
         if (soc < 20 || soc > 80)
         {
-            EvaluateBatteryMeasure(soc, "State of Charge");
+            BatteryMeasure.EvaluateBatteryMeasure(soc, "State of Charge");
             return false;
         }
         return true;
@@ -57,40 +58,10 @@ class Checker
     {
         if (chargeRate > 0.8)
         {
-            EvaluateBatteryMeasure(chargeRate, "Charge Rate");
+            BatteryMeasure.EvaluateBatteryMeasure(chargeRate, "Charge Rate");
             return false;
         }
         return true;
-    }
-    static void EvaluateBatteryMeasure(float MeasureValue, string Measure)
-    {
-        if (MeasureValue > 45 && Measure == "Temperature")
-            PrintMaximumLimitMessage(Measure, 45);
-        if (MeasureValue < 0 && Measure == "Temperature")
-            PrintMinimumLimitMessage(Measure, 0);
-        if (MeasureValue > 80 && Measure == "State of Charge")
-            PrintMaximumLimitMessage(Measure, 80);
-        if (MeasureValue < 20 && Measure == "State of Charge")
-            PrintMinimumLimitMessage(Measure, 0);
-        if (MeasureValue > 0.8 && Measure == "Charge Rate")
-            PrintMaximumLimitMessage(Measure, 0.8f);
-
-        DisplayOutOfRangeMessage(Measure);
-    }
-
-    static void PrintMaximumLimitMessage(string Measure, float MaximumLimit)
-    {
-        Console.WriteLine(Measure + " has exceeded its Maximum Limit of " + MaximumLimit);
-    }
-
-    static void PrintMinimumLimitMessage(string Measure, float MaximumLimit)
-    {
-        Console.WriteLine(Measure + " has fall behind its Minimum Limit of " + MaximumLimit);
-    }
-
-    static void DisplayOutOfRangeMessage(string Measure)
-    {
-        Console.WriteLine(Measure + " is out of range!");
     }
 
     static void PassedBatteryMeasure(bool IsBatteryOk)
@@ -110,16 +81,6 @@ class Checker
         }
     }
 
-    class BatteryMeasure
-    {
-        public float Temperature, StateOfCharge, ChargeRate;
-        public BatteryMeasure(float temperature, float soc, float chargeRate)
-        {
-            this.Temperature = temperature;
-            this.StateOfCharge = soc;
-            this.ChargeRate = chargeRate;
-        }
-    }
     static int Main()
     {
         PassedBatteryMeasure(batteryIsOk(new BatteryMeasure(25,70,0.7f)));
