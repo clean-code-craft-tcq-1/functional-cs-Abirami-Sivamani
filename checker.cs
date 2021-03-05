@@ -28,7 +28,8 @@ class Checker
     {
         if (temperature < 0 || temperature > 45)
         {
-            BatteryMeasure.EvaluateBatteryMeasure(temperature, "Temperature");
+            BatteryMeasure.EvaluateHighTemperature(temperature);
+            BatteryMeasure.EvaluateLowTemperature(temperature);
             return false;
         }
         return true;
@@ -43,7 +44,8 @@ class Checker
     {
         if (soc < 20 || soc > 80)
         {
-            BatteryMeasure.EvaluateBatteryMeasure(soc, "State of Charge");
+            BatteryMeasure.EvaluateHighStateOfCharge(soc);
+            BatteryMeasure.EvaluateLowStateOfCharge(soc);
             return false;
         }
         return true;
@@ -58,7 +60,7 @@ class Checker
     {
         if (chargeRate > 0.8)
         {
-            BatteryMeasure.EvaluateBatteryMeasure(chargeRate, "Charge Rate");
+            BatteryMeasure.EvaluateHighChargeRate(chargeRate);
             return false;
         }
         return true;
