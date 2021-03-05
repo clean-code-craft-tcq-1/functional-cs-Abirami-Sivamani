@@ -16,36 +16,16 @@ namespace BatteryManagement
             this.ChargeRate = chargeRate;
         }
 
-        public static void EvaluateHighTemperature(float temperature)
+        public static void EvaluateBatteryMeasure(BatteryMeasureFactors battery)
         {
-            if (temperature > 45)
-                PrintMaximumLimitMessage("Temperature", 45);
-        }
+            if(battery.MeasureValue > battery.MaximumLimit)
+                PrintMaximumLimitMessage(battery.MeasureName, battery.MaximumLimit);
+            if (battery.MeasureValue < battery.MinimumLimit)
+                PrintMinimumLimitMessage(battery.MeasureName, battery.MinimumLimit);
 
-        public static void EvaluateLowTemperature(float temperature)
-        {
-            if (temperature < 0)
-                PrintMinimumLimitMessage("Temperature", 0);
+            DisplayOutOfRangeMessage(battery.MeasureName);
         }
-
-        public static void EvaluateHighStateOfCharge(float soc)
-        {
-            if (soc > 80)
-                PrintMaximumLimitMessage("State of Charge", 80);
-        }
-
-        public static void EvaluateLowStateOfCharge(float soc)
-        {
-            if (soc < 20)
-                PrintMinimumLimitMessage("State of Charge", 0);
-        }
-
-        public static void EvaluateHighChargeRate(float chargeRate)
-        {
-            if (chargeRate > 0.8)
-                PrintMaximumLimitMessage("Charge Rate", 0.8f);
-        }
-
+        
         static void PrintMaximumLimitMessage(string Measure, float MaximumLimit)
         {
             Console.WriteLine(Measure + " has exceeded its Maximum Limit of " + MaximumLimit);
@@ -59,6 +39,19 @@ namespace BatteryManagement
         static void DisplayOutOfRangeMessage(string Measure)
         {
             Console.WriteLine(Measure + " is out of range!");
+        }
+    }
+    
+    class BatteryMeasureFactors
+    {
+       public float MeasureValue, MaximumLimit, MinimumLimit;
+       public string MeasureName;
+        public BatteryMeasureFactors(string Name, float Value, float MaximumValue, float MinimumValue)
+        {
+            this.MeasureName = Name;
+            this.MeasureValue = Value;
+            this.MaximumLimit = MaximumValue;
+            this.MinimumLimit = MinimumValue;
         }
     }
 }
