@@ -2,95 +2,98 @@ using System;
 using System.Diagnostics;
 using BatteryChecker;
 
-class Checker
+namespace BatteryChecker
 {
-    /// <summary>
-    /// Batteries the is ok.
-    /// </summary>
-    /// <param name="temperature">The temperature.</param>
-    /// <param name="soc">The soc.</param>
-    /// <param name="chargeRate">The charge rate.</param>
-    /// <returns></returns>
-    static bool batteryIsOk(BatteryMeasure measures)
+    class Checker
     {
-        bool TemperatureMeasureCheck = CheckTemperature(measures.Temperature);
-        bool ChargeStateMeasureCheck = CheckStateOfCharge(measures.StateOfCharge);
-        bool ChargeRateMeasureCheck = CheckChargeRate(measures.ChargeRate);
-        return (TemperatureMeasureCheck && ChargeStateMeasureCheck && ChargeRateMeasureCheck);
-    }
-
-    /// <summary>
-    /// Checks the temperature.
-    /// </summary>
-    /// <param name="temperature">The temperature.</param>
-    /// <returns></returns>
-    static bool CheckTemperature(float temperature)
-    {
-        if (temperature < 0 || temperature > 45)
+        /// <summary>
+        /// Batteries the is ok.
+        /// </summary>
+        /// <param name="temperature">The temperature.</param>
+        /// <param name="soc">The soc.</param>
+        /// <param name="chargeRate">The charge rate.</param>
+        /// <returns></returns>
+        static bool batteryIsOk(BatteryMeasure measures)
         {
-            BatteryMeasure.EvaluateHighTemperature(temperature);
-            BatteryMeasure.EvaluateLowTemperature(temperature);
-            return false;
+            bool TemperatureMeasureCheck = CheckTemperature(measures.Temperature);
+            bool ChargeStateMeasureCheck = CheckStateOfCharge(measures.StateOfCharge);
+            bool ChargeRateMeasureCheck = CheckChargeRate(measures.ChargeRate);
+            return (TemperatureMeasureCheck && ChargeStateMeasureCheck && ChargeRateMeasureCheck);
         }
-        return true;
-    }
 
-    /// <summary>
-    /// Checks the state of charge.
-    /// </summary>
-    /// <param name="soc">The soc.</param>
-    /// <returns></returns>
-    static bool CheckStateOfCharge(float soc)
-    {
-        if (soc < 20 || soc > 80)
+        /// <summary>
+        /// Checks the temperature.
+        /// </summary>
+        /// <param name="temperature">The temperature.</param>
+        /// <returns></returns>
+        static bool CheckTemperature(float temperature)
         {
-            BatteryMeasure.EvaluateHighStateOfCharge(soc);
-            BatteryMeasure.EvaluateLowStateOfCharge(soc);
-            return false;
+            if (temperature < 0 || temperature > 45)
+            {
+                BatteryMeasure.EvaluateHighTemperature(temperature);
+                BatteryMeasure.EvaluateLowTemperature(temperature);
+                return false;
+            }
+            return true;
         }
-        return true;
-    }
 
-    /// <summary>
-    /// Checks the charge rate.
-    /// </summary>
-    /// <param name="chargeRate">The charge rate.</param>
-    /// <returns></returns>
-    static bool CheckChargeRate(float chargeRate)
-    {
-        if (chargeRate > 0.8)
+        /// <summary>
+        /// Checks the state of charge.
+        /// </summary>
+        /// <param name="soc">The soc.</param>
+        /// <returns></returns>
+        static bool CheckStateOfCharge(float soc)
         {
-            BatteryMeasure.EvaluateHighChargeRate(chargeRate);
-            return false;
+            if (soc < 20 || soc > 80)
+            {
+                BatteryMeasure.EvaluateHighStateOfCharge(soc);
+                BatteryMeasure.EvaluateLowStateOfCharge(soc);
+                return false;
+            }
+            return true;
         }
-        return true;
-    }
 
-    static void PassedBatteryMeasure(bool IsBatteryOk)
-    {
-        if (!IsBatteryOk)
+        /// <summary>
+        /// Checks the charge rate.
+        /// </summary>
+        /// <param name="chargeRate">The charge rate.</param>
+        /// <returns></returns>
+        static bool CheckChargeRate(float chargeRate)
         {
-            Console.WriteLine("Expected true, but got false");
-            Environment.Exit(1);
+            if (chargeRate > 0.8)
+            {
+                BatteryMeasure.EvaluateHighChargeRate(chargeRate);
+                return false;
+            }
+            return true;
         }
-    }
-    static void FailedBatteryMeasure(bool IsBatteryOk)
-    {
-        if (IsBatteryOk)
-        {
-            Console.WriteLine("Expected false, but got true");
-            Environment.Exit(1);
-        }
-    }
 
-    static int Main()
-    {
-        PassedBatteryMeasure(batteryIsOk(new BatteryMeasure(25,70,0.7f)));
-        FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(60, 65, 0.6f)));
-        FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(-50, 85, 0.0f)));
-        FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(43, 10, 0.9f)));
-        Console.WriteLine("All ok");
-        return 0;
+        static void PassedBatteryMeasure(bool IsBatteryOk)
+        {
+            if (!IsBatteryOk)
+            {
+                Console.WriteLine("Expected true, but got false");
+                Environment.Exit(1);
+            }
+        }
+        static void FailedBatteryMeasure(bool IsBatteryOk)
+        {
+            if (IsBatteryOk)
+            {
+                Console.WriteLine("Expected false, but got true");
+                Environment.Exit(1);
+            }
+        }
+
+        static int Main()
+        {
+            PassedBatteryMeasure(batteryIsOk(new BatteryMeasure(25,70,0.7f)));
+            FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(60, 65, 0.6f)));
+            FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(-50, 85, 0.0f)));
+            FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(43, 10, 0.9f)));
+            Console.WriteLine("All ok");
+            return 0;
+        }
     }
 }
 
