@@ -29,8 +29,7 @@ namespace BatteryManagement
         {
             if (temperature < 0 || temperature > 45)
             {
-                BatteryMeasure.EvaluateHighTemperature(temperature);
-                BatteryMeasure.EvaluateLowTemperature(temperature);
+                BatteryMeasure.EvaluateBatteryMeasure(new BatteryMeasureFactors("Temperature", temperature, 45 ,0));
                 return false;
             }
             return true;
@@ -45,8 +44,7 @@ namespace BatteryManagement
         {
             if (soc < 20 || soc > 80)
             {
-                BatteryMeasure.EvaluateHighStateOfCharge(soc);
-                BatteryMeasure.EvaluateLowStateOfCharge(soc);
+                BatteryMeasure.EvaluateBatteryMeasure(new BatteryMeasureFactors("State of Charge", soc, 20, 80));
                 return false;
             }
             return true;
@@ -61,7 +59,7 @@ namespace BatteryManagement
         {
             if (chargeRate > 0.8)
             {
-                BatteryMeasure.EvaluateHighChargeRate(chargeRate);
+                BatteryMeasure.EvaluateBatteryMeasure(new BatteryMeasureFactors("Charge Rate",chargeRate, 0.8f, 0.0f));
                 return false;
             }
             return true;
@@ -88,7 +86,7 @@ namespace BatteryManagement
         {
             PassedBatteryMeasure(batteryIsOk(new BatteryMeasure(25,70,0.7f)));
             FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(60, 65, 0.6f)));
-            FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(-50, 85, 0.0f)));
+            FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(-50, 85, 0.2f)));
             FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(43, 10, 0.9f)));
             Console.WriteLine("All ok");
             return 0;
