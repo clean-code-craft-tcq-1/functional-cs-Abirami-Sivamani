@@ -16,20 +16,34 @@ namespace BatteryChecker
             this.ChargeRate = chargeRate;
         }
 
-        public static void EvaluateBatteryMeasure(float MeasureValue, string Measure)
+        public static void EvaluateHighTemperature(float temperature)
         {
-            if (MeasureValue > 45 && Measure == "Temperature")
-                PrintMaximumLimitMessage(Measure, 45);
-            if (MeasureValue < 0 && Measure == "Temperature")
-                PrintMinimumLimitMessage(Measure, 0);
-            if (MeasureValue > 80 && Measure == "State of Charge")
-                PrintMaximumLimitMessage(Measure, 80);
-            if (MeasureValue < 20 && Measure == "State of Charge")
-                PrintMinimumLimitMessage(Measure, 0);
-            if (MeasureValue > 0.8 && Measure == "Charge Rate")
-                PrintMaximumLimitMessage(Measure, 0.8f);
+            if (temperature > 45)
+                PrintMaximumLimitMessage("Temperature", 45);
+        }
 
-            DisplayOutOfRangeMessage(Measure);
+        public static void EvaluateLowTemperature(float temperature)
+        {
+            if (temperature < 0)
+                PrintMinimumLimitMessage("Temperature", 0);
+        }
+
+        public static void EvaluateHighStateOfCharge(float soc)
+        {
+            if (soc > 80)
+                PrintMaximumLimitMessage("State of Charge", 80);
+        }
+
+        public static void EvaluateLowStateOfCharge(float soc)
+        {
+            if (soc < 20)
+                PrintMinimumLimitMessage("State of Charge", 0);
+        }
+
+        public static void EvaluateHighChargeRate(float chargeRate)
+        {
+            if (chargeRate > 0.8)
+                PrintMaximumLimitMessage("Charge Rate", 0.8f);
         }
 
         static void PrintMaximumLimitMessage(string Measure, float MaximumLimit)
