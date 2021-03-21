@@ -12,7 +12,7 @@ namespace BatteryManagement
         /// <param name="soc">The soc.</param>
         /// <param name="chargeRate">The charge rate.</param>
         /// <returns></returns>
-        static bool batteryIsOk(BatteryMeasure measures)
+        static bool IsBatteryOk(BatteryMeasure measures)
         {
             bool TemperatureMeasureCheck = CheckTemperature(measures.Temperature);
             bool ChargeStateMeasureCheck = CheckStateOfCharge(measures.StateOfCharge);
@@ -27,12 +27,8 @@ namespace BatteryManagement
         /// <returns></returns>
         static bool CheckTemperature(float temperature)
         {
-            if (temperature < 0 || temperature > 45)
-            {
-                BatteryMeasure.EvaluateBatteryMeasure(new BatteryMeasureFactors("Temperature", temperature, 45 ,0));
-                return false;
-            }
-            return true;
+            BatteryMeasureFactors measures = new BatteryMeasureFactors("Temperature", temperature, 45 ,0);
+            return BatteryMeasure.CrossedMaximum(measures) && BatteryMeasure.CrossedMinimum(measures);
         }
 
         /// <summary>
@@ -42,12 +38,8 @@ namespace BatteryManagement
         /// <returns></returns>
         static bool CheckStateOfCharge(float soc)
         {
-            if (soc < 20 || soc > 80)
-            {
-                BatteryMeasure.EvaluateBatteryMeasure(new BatteryMeasureFactors("State of Charge", soc, 20, 80));
-                return false;
-            }
-            return true;
+            BatteryMeasureFactors measures = new BatteryMeasureFactors("State of Charge", soc, 80, 20);
+            return BatteryMeasure.CrossedMaximum(measures) && BatteryMeasure.CrossedMinimum(measures);
         }
 
         /// <summary>
@@ -57,12 +49,8 @@ namespace BatteryManagement
         /// <returns></returns>
         static bool CheckChargeRate(float chargeRate)
         {
-            if (chargeRate > 0.8)
-            {
-                BatteryMeasure.EvaluateBatteryMeasure(new BatteryMeasureFactors("Charge Rate",chargeRate, 0.8f, 0.0f));
-                return false;
-            }
-            return true;
+            BatteryMeasureFactors measures = new BatteryMeasureFactors("Charge Rate",chargeRate, 0.8f, 0.0f);
+            return BatteryMeasure.CrossedMaximum(measures) && BatteryMeasure.CrossedMinimum(measures);
         }
 
         static void PassedBatteryMeasure(bool IsBatteryOk)
@@ -84,10 +72,10 @@ namespace BatteryManagement
 
         static int Main()
         {
-            PassedBatteryMeasure(batteryIsOk(new BatteryMeasure(25,70,0.7f)));
-            FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(60, 65, 0.6f)));
-            FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(-50, 85, 0.2f)));
-            FailedBatteryMeasure(batteryIsOk(new BatteryMeasure(43, 10, 0.9f)));
+            PassedBatteryMeasure(IsBatteryOk(new BatteryMeasure(25,70,0.7f)));
+            FailedBatteryMeasure(IsBatteryOk(new BatteryMeasure(60, 65, 0.6f)));
+            FailedBatteryMeasure(IsBatteryOk(new BatteryMeasure(-50, 85, 0.2f)));
+            FailedBatteryMeasure(IsBatteryOk(new BatteryMeasure(43, 10, 0.9f)));
             Console.WriteLine("All ok");
             return 0;
         }
