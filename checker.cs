@@ -1,38 +1,84 @@
 using System;
 using System.Diagnostics;
 
-class Checker
+namespace BatteryManagement
 {
-    static bool batteryIsOk(float temperature, float soc, float chargeRate) {
-        if(temperature < 0 || temperature > 45) {
-            Console.WriteLine("Temperature is out of range!");
-            return false;
-        } else if(soc < 20 || soc > 80) {
-            Console.WriteLine("State of Charge is out of range!");
-            return false;
-        } else if(chargeRate > 0.8) {
-            Console.WriteLine("Charge Rate is out of range!");
-            return false;
+    class Checker
+    {
+        /// <summary>
+        /// Batteries the is ok.
+        /// </summary>
+        /// <param name="temperature">The temperature.</param>
+        /// <param name="soc">The soc.</param>
+        /// <param name="chargeRate">The charge rate.</param>
+        /// <returns></returns>
+        static bool IsBatteryOk(BatteryMeasure measures)
+        {
+            bool TemperatureMeasureCheck = CheckTemperature(measures.Temperature);
+            bool ChargeStateMeasureCheck = CheckStateOfCharge(measures.StateOfCharge);
+            bool ChargeRateMeasureCheck = CheckChargeRate(measures.ChargeRate);
+            return (TemperatureMeasureCheck && ChargeStateMeasureCheck && ChargeRateMeasureCheck);
         }
-        return true;
-    }
 
-    static void ExpectTrue(bool expression) {
-        if(!expression) {
-            Console.WriteLine("Expected true, but got false");
-            Environment.Exit(1);
+        /// <summary>
+        /// Checks the temperature.
+        /// </summary>
+        /// <param name="temperature">The temperature.</param>
+        /// <returns></returns>
+        static bool CheckTemperature(float temperature)
+        {
+            BatteryMeasureFactors measures = new BatteryMeasureFactors("Temperature", temperature, 45 ,0);
+            return BatteryMeasure.CrossedMaximum(measures) && BatteryMeasure.CrossedMinimum(measures);
         }
-    }
-    static void ExpectFalse(bool expression) {
-        if(expression) {
-            Console.WriteLine("Expected false, but got true");
-            Environment.Exit(1);
+
+        /// <summary>
+        /// Checks the state of charge.
+        /// </summary>
+        /// <param name="soc">The soc.</param>
+        /// <returns></returns>
+        static bool CheckStateOfCharge(float soc)
+        {
+            BatteryMeasureFactors measures = new BatteryMeasureFactors("State of Charge", soc, 80, 20);
+            return BatteryMeasure.CrossedMaximum(measures) && BatteryMeasure.CrossedMinimum(measures);
         }
-    }
-    static int Main() {
-        ExpectTrue(batteryIsOk(25, 70, 0.7f));
-        ExpectFalse(batteryIsOk(50, 85, 0.0f));
-        Console.WriteLine("All ok");
-        return 0;
+
+        /// <summary>
+        /// Checks the charge rate.
+        /// </summary>
+        /// <param name="chargeRate">The charge rate.</param>
+        /// <returns></returns>
+        static bool CheckChargeRate(float chargeRate)
+        {
+            BatteryMeasureFactors measures = new BatteryMeasureFactors("Charge Rate",chargeRate, 0.8f, 0.0f);
+            return BatteryMeasure.CrossedMaximum(measures) && BatteryMeasure.CrossedMinimum(measures);
+        }
+
+        static void PassedBatteryMeasure(bool IsBatteryOk)
+        {
+            if (!IsBatteryOk)
+            {
+                Console.WriteLine("Expected true, but got false");
+                Environment.Exit(1);
+            }
+        }
+        static void FailedBatteryMeasure(bool IsBatteryOk)
+        {
+            if (IsBatteryOk)
+            {
+                Console.WriteLine("Expected false, but got true");
+                Environment.Exit(1);
+            }
+        }
+
+        static int Main()
+        {
+            PassedBatteryMeasure(IsBatteryOk(new BatteryMeasure(25,70,0.7f)));
+            FailedBatteryMeasure(IsBatteryOk(new BatteryMeasure(60, 65, 0.6f)));
+            FailedBatteryMeasure(IsBatteryOk(new BatteryMeasure(-50, 85, 0.2f)));
+            FailedBatteryMeasure(IsBatteryOk(new BatteryMeasure(43, 10, 0.9f)));
+            Console.WriteLine("All ok");
+            return 0;
+        }
     }
 }
+
