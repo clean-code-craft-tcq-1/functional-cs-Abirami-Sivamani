@@ -15,25 +15,35 @@ namespace BatteryManagement
             this.StateOfCharge = soc;
             this.ChargeRate = chargeRate;
         }
-
-        public static void EvaluateBatteryMeasure(BatteryMeasureFactors battery)
+        
+        public static bool CrossedMaximum(BatteryMeasureFactors battery)
         {
-            if(battery.MeasureValue > battery.MaximumLimit)
-                PrintMaximumLimitMessage(battery.MeasureName, battery.MaximumLimit);
-            if (battery.MeasureValue < battery.MinimumLimit)
-                PrintMinimumLimitMessage(battery.MeasureName, battery.MinimumLimit);
-
-            DisplayOutOfRangeMessage(battery.MeasureName);
+              if(battery.MeasureValue > battery.MaximumLimit) {
+                  PrintMaximumLimitMessage(battery.MeasureName, battery.MaximumLimit);
+                  return false;
+              }
+            return true;
+        }
+        
+        public static bool CrossedMinimum(BatteryMeasureFactors battery) 
+        {
+             if (battery.MeasureValue < battery.MinimumLimit) {
+                 PrintMinimumLimitMessage(battery.MeasureName, battery.MinimumLimit);
+                 return false;
+             }
+            return true;
         }
         
         static void PrintMaximumLimitMessage(string Measure, float MaximumLimit)
         {
             Console.WriteLine(Measure + " has exceeded its Maximum Limit of " + MaximumLimit);
+            DisplayOutOfRangeMessage(Measure);
         }
 
         static void PrintMinimumLimitMessage(string Measure, float MaximumLimit)
         {
             Console.WriteLine(Measure + " has fall behind its Minimum Limit of " + MaximumLimit);
+            DisplayOutOfRangeMessage(Measure);
         }
 
         static void DisplayOutOfRangeMessage(string Measure)
